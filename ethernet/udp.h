@@ -16,5 +16,5 @@ public:
 	int header_length();
 	int read(uint8_t* buf, int max_size);
 	int write(uint8_t* buf, int max_size);
-	char* to_string();
+	string to_string();
 };

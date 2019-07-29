@@ -2,6 +2,7 @@
 #include "util.h"
 
 UDP::UDP() {}
+UDP::~UDP() {}
 
 int UDP::header_length() {
 	return 8;
@@ -31,3 +32,6 @@ int UDP::write(uint8_t* buf, int max_size) {
 	return p;
 }
 
+string UDP::to_string() {
+	return NULL;
+}

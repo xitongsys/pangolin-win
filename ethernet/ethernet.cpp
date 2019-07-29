@@ -38,6 +38,13 @@ int Ethernet::write(uint8_t* buf, int max_size) {
 	return p;
 }
 
-char* Ethernet::to_string() {
-	return NULL;
+string Ethernet::to_string() {
+	char fmt[] = "dst: %X:%X:%X:%X:%X:%X\nsrc: %X:%X:%X:%X:%X:%X\ntype:%X\n";
+	char buf[1024];
+	memset(buf, 0, sizeof(char) * 1024);
+	sprintf_s(buf, 1024, fmt, 
+		dst[0], dst[1], dst[2], dst[3], dst[4], dst[5],
+		src[0], src[1], src[2], src[3], src[4], src[5],
+		type);
+	return buf;
 }

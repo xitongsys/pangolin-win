@@ -33,6 +33,6 @@ int IPv4Pseudo::write(uint8_t* buf, int max_size) {
 	return p;
 }
 
-char* IPv4Pseudo::to_string() {
+string IPv4Pseudo::to_string() {
 	return NULL;
 }

@@ -1,3 +1,5 @@
+#include <cstdio>
+#include <cstring>
 #include "ipv4.h"
 #include "util.h"
 
@@ -28,6 +30,8 @@ int IPv4::read(uint8_t* buf, int max_size) {
 	checksum = read16(buf + p); p += 2;
 	src = read32(buf + p); p += 4;
 	dst = read32(buf + p); p += 4;
+
+	return p;
 
 	int ln = header_length();
 	if (ln > max_size) return -1;
@@ -65,8 +69,11 @@ int IPv4::write(uint8_t* buf, int max_size) {
 	return p;
 }
 
-char* IPv4::to_string() {
-	return NULL;
+string IPv4::to_string() {
+	char fmt[] = "version: %X\ntos: %X\nlen: %X\nid: %X\noffset: %X\nttl: %X\nprotocol: %X\nchecksum: %X\nsrc: %s\ndst: %s\n";
+	char buf[1024];
+	sprintf_s(buf, fmt, version, tos, len, id, offset, ttl, protocol, checksum, ip2str(src).c_str(), ip2str(dst).c_str());
+	return string(buf);
 }
 
 void IPv4::set_checksum(uint8_t* buf, int pos, int size) {

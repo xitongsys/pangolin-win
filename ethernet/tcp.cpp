@@ -7,6 +7,7 @@ TCP::TCP() {
 
 TCP::~TCP() {
 	if (opt != NULL) delete opt;
+	opt = NULL;
 }
 
 int TCP::header_length() {
@@ -58,6 +59,9 @@ int TCP::write(uint8_t* buf, int max_size) {
 	return p;
 }
 
-char* TCP::to_string() {
-	return NULL;
+string TCP::to_string() {
+	char fmt[] = "src_port: %d\ndst_port: %d\nseq: %d\nack: %d\noffset: %d\nflags: %X\nwin: %d\nchecksum: %X\nurg_pointer: %X\n";
+	char buf[1024];
+	sprintf_s(buf, 1024, fmt, src_port, dst_port, seq, ack, offset, flags, win, checksum, urg_pointer);
+	return buf;
 }

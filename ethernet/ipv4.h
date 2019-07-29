@@ -1,6 +1,9 @@
 #pragma once
 #include <cstdint>
+#include <string>
 #include "header.h"
+
+using std::string;
 
 class IPv4 : public Header {
 public:
@@ -23,7 +26,7 @@ public:
 	int header_length();
 	int read(uint8_t* buf, int max_size);
 	int write(uint8_t* buf, int max_size);
-	char* to_string();
+	string to_string();
 
 private:
 	void set_checksum(uint8_t* buf, int pos, int size);
