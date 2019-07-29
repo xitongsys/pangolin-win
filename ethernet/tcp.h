@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 #include "header.h"
+using namespace std;
 
 class TCP : public Header {
 public:
@@ -13,7 +15,7 @@ public:
 	uint16_t win;
 	uint16_t checksum;
 	uint16_t urg_pointer;
-	uint8_t *opt;
+	vector<uint8_t> opt;
 
 public:
 	TCP();

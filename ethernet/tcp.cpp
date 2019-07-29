@@ -1,14 +1,9 @@
 #include "tcp.h"
 #include "util.h"
 
-TCP::TCP() {
-	opt = NULL;
-}
+TCP::TCP() {}
 
-TCP::~TCP() {
-	if (opt != NULL) delete opt;
-	opt = NULL;
-}
+TCP::~TCP() {}
 
 int TCP::header_length() {
 	return (offset >> 4) * 4;
@@ -30,8 +25,7 @@ int TCP::read(uint8_t* buf, int max_size) {
 
 	int ln = header_length();
 	if (ln > max_size) return -1;
-	if (opt != NULL) delete opt;
-	opt = new uint8_t(ln - 20);
+	opt = vector<uint8_t>(ln - 20);
 	for (int i = 0; i < ln - 20; i++) {
 		opt[i] = read8(buf + p); p++;
 	}
@@ -60,7 +54,7 @@ int TCP::write(uint8_t* buf, int max_size) {
 }
 
 string TCP::to_string() {
-	char fmt[] = "src_port: %d\ndst_port: %d\nseq: %d\nack: %d\noffset: %d\nflags: %X\nwin: %d\nchecksum: %X\nurg_pointer: %X\n";
+	char fmt[] = "src_port: %u\ndst_port: %u\nseq: %u\nack: %u\noffset: %u\nflags: %X\nwin: %u\nchecksum: %X\nurg_pointer: %X\n";
 	char buf[1024];
 	sprintf_s(buf, 1024, fmt, src_port, dst_port, seq, ack, offset, flags, win, checksum, urg_pointer);
 	return buf;
