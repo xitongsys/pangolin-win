@@ -139,6 +139,11 @@ void packet_handler(u_char* param, const struct pcap_pkthdr* header, const u_cha
 		uint8_t buf[65535];
 		//frame.ipv4.write(buf, 65535);
 		frame.write(buf, 65535);
+		//frame.ethernet.write(buf, 65535);
+
+		for (int i = 0; i < 20; i++) {
+			//printf("%d ==== %d\n", pkt_data[i], buf[i]);
+		}
 	}
 	
 	/*

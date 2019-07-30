@@ -57,24 +57,24 @@ int Frame::write(uint8_t* buf, int max_size) {
 	int p = 0;
 	int wn = 0;
 
-	wn = ethernet.write(buf, max_size - p);
+	wn = ethernet.write(buf + p, max_size - p);
 	if (wn < 0) return -1;
 	p += wn;
 
-	wn = ipv4.write(buf, max_size - p);
+	wn = ipv4.write(buf + p, max_size - p);
 	if (wn < 0) return -1;
 	p += wn;
 
 	switch (ipv4.protocol)
 	{
 	case TCPID:
-		wn = tcp.write(buf, max_size - p);
+		wn = tcp.write(buf + p, max_size - p);
 		if (wn < 0) return -1;
 		p += wn;
 		break;
 
 	case UDPID:
-		wn = udp.write(buf, max_size - p);
+		wn = udp.write(buf + p, max_size - p);
 		if (wn < 0) return -1;
 		p += wn;
 		break;
@@ -125,12 +125,12 @@ void Frame::set_checksum(uint8_t* buf, int pos, int size) {
 	}
 
 	int prefix_pos = ethernet.header_length() + ipv4.header_length();
-	for (int i = prefix_pos; i < size; i += 2) {
+	for (int i = prefix_pos; i < size - 1; i += 2) {
 		s += read16(buf + i);
 	}
 
 	if ((size - prefix_pos) % 2 == 1) {
-		s += (uint32_t)(buf[size - 1]) << 16;
+		s += ((uint32_t)(buf[size - 1])) << 8;
 	}
 
 	while ((s >> 16) > 0) {
@@ -138,6 +138,5 @@ void Frame::set_checksum(uint8_t* buf, int pos, int size) {
 	}
 
 	uint16_t checksum = ~(uint16_t)(s);
-	printf("======%X\n", checksum);
 	write16(checksum, buf + pos);
 }

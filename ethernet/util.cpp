@@ -41,26 +41,26 @@ void write8(uint8_t v, uint8_t* buf) {
 }
 
 void write16(uint16_t v, uint8_t* buf) {
-	buf[0] = (uint8_t)(v >> 8);
-	buf[1] = (uint8_t)(v >> 0);
+	buf[0] = (uint8_t)(v >> 8) & 0xff;
+	buf[1] = (uint8_t)(v >> 0) & 0xff;
 }
 
 void write32(uint32_t v, uint8_t* buf) {
-	buf[0] = (uint8_t)(v >> 24);
-	buf[1] = (uint8_t)(v >> 16);
-	buf[2] = (uint8_t)(v >> 8);
-	buf[3] = (uint8_t)(v >> 0);
+	buf[0] = (uint8_t)(v >> 24) & 0xff;
+	buf[1] = (uint8_t)(v >> 16) & 0xff;
+	buf[2] = (uint8_t)(v >> 8) & 0xff;
+	buf[3] = (uint8_t)(v >> 0) & 0xff;
 }
 
 void write64(uint64_t v, uint8_t* buf) {
-	buf[0] = (uint8_t)(v >> 56);
-	buf[1] = (uint8_t)(v >> 48);
-	buf[2] = (uint8_t)(v >> 40);
-	buf[3] = (uint8_t)(v >> 32);
-	buf[4] = (uint8_t)(v >> 24);
-	buf[5] = (uint8_t)(v >> 16);
-	buf[6] = (uint8_t)(v >> 8);
-	buf[7] = (uint8_t)(v >> 0);
+	buf[0] = (uint8_t)(v >> 56) & 0xff;
+	buf[1] = (uint8_t)(v >> 48) & 0xff;
+	buf[2] = (uint8_t)(v >> 40) & 0xff;
+	buf[3] = (uint8_t)(v >> 32) & 0xff;
+	buf[4] = (uint8_t)(v >> 24) & 0xff;
+	buf[5] = (uint8_t)(v >> 16) & 0xff;
+	buf[6] = (uint8_t)(v >> 8) & 0xff;
+	buf[7] = (uint8_t)(v >> 0) & 0xff;
 }
 
 string ip2str(uint32_t ip) {
