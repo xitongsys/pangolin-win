@@ -34,5 +34,8 @@ int IPv4Pseudo::write(uint8_t* buf, int max_size) {
 }
 
 string IPv4Pseudo::to_string() {
-	return NULL;
+	char fmt[] = "src: %s\ndst: %s\nreserved: %X\nprotocol: %X\nlen: %u\n";
+	char buf[1024];
+	sprintf_s(buf, 1024, fmt, src, dst, reserved, protocol, len);
+	return buf;
 }

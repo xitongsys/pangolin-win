@@ -13,6 +13,7 @@ Frame::Frame() {
 }
 
 int Frame::read(uint8_t* buf, int max_size) {
+	content = vector<uint8_t>(0);
 	int p = 0;
 	int rn = 0;
 
