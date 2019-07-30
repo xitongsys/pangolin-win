@@ -1,6 +1,8 @@
 #include "frame.h"
 #include "const.h"
 #include "util.h"
+#include <iostream>
+using namespace std;
 
 Frame::Frame() {
 	ethernet = Ethernet();
@@ -14,31 +16,37 @@ int Frame::read(uint8_t* buf, int max_size) {
 	int p = 0;
 	int rn = 0;
 
-	rn = ethernet.read(buf, max_size - p);
+	rn = ethernet.read(buf + p, max_size - p);
 	if (rn < 0) return -1;
 	p += rn;
 
-	rn = ipv4.read(buf, max_size - p);
+	rn = ipv4.read(buf + p, max_size - p);
 	if (rn < 0) return -1;
 	p += rn;
 
 	switch (ipv4.protocol) {
 	case TCPID:
-		rn = tcp.read(buf, max_size - p);
+		rn = tcp.read(buf + p, max_size - p);
 		if (rn < 0) return -1;
 		p += rn;
+
+		for (int i = 0; i < ipv4.len - ipv4.header_length() - tcp.header_length(); i++) {
+			uint8_t a = read8(buf + p);
+			content.push_back(a);
+			p++;
+		}
 		break;
 
 	case UDPID:
-		rn = udp.read(buf, max_size - p);
+		rn = udp.read(buf + p, max_size - p);
 		if (rn < 0) return -1;
 		p += rn;
+		for (int i = 0; i < ipv4.len - ipv4.header_length() - udp.header_length(); i++) {
+			uint8_t a = read8(buf + p);
+			content.push_back(a);
+			p++;
+		}
 		break;
-	}
-
-	for (; p < ipv4.len; p++) {
-		uint8_t a = read8(buf + p);
-		content.push_back(a);
 	}
 
 	return p;
@@ -128,5 +136,7 @@ void Frame::set_checksum(uint8_t* buf, int pos, int size) {
 		s = (s >> 16) + (s & 0xffff);
 	}
 
-	write16(~(uint16_t)(s), buf + pos);
+	uint16_t checksum = ~(uint16_t)(s);
+	printf("======%X\n", checksum);
+	write16(checksum, buf + pos);
 }

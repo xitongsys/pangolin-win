@@ -130,6 +130,18 @@ void packet_handler(u_char* param, const struct pcap_pkthdr* header, const u_cha
 	localtime_s(&ltime, &local_tv_sec);
 	strftime(timestr, sizeof timestr, "%H:%M:%S", &ltime);
 
+	Frame frame;
+	int rn = frame.read((uint8_t*)pkt_data, header->caplen);
+
+	if (frame.ipv4.protocol == TCPID) {
+		cout << frame.tcp.to_string() << endl;
+		//cout << frame.ipv4.to_string() << endl;
+		uint8_t buf[65535];
+		//frame.ipv4.write(buf, 65535);
+		frame.write(buf, 65535);
+	}
+	
+	/*
 	Ethernet ethernet;
 	int rn = ethernet.read((uint8_t*)pkt_data, header->caplen);
 	//cout << ethernet.to_string() << endl;
@@ -143,6 +155,13 @@ void packet_handler(u_char* param, const struct pcap_pkthdr* header, const u_cha
 		rn += tcp.read((uint8_t*)(pkt_data + rn), header->caplen - rn);
 		cout << tcp.to_string() << endl;
 	}
+
+	if (ipv4.protocol == UDPID) {
+		UDP udp;
+		rn += udp.read((uint8_t*)(pkt_data + rn), header->caplen - rn);
+		cout << udp.to_string() << endl;
+	}
+	*/
 
 	//printf("%s,%.6d len:%d\n", timestr, header->ts.tv_usec, header->len);
 }

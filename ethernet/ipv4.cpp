@@ -87,5 +87,6 @@ void IPv4::set_checksum(uint8_t* buf, int pos, int size) {
 		s = (s >> 16) + (s & 0xffff);
 	}
 
-	write16(~uint16_t(s), buf + pos);
+	uint16_t checksum = ~uint16_t(s);
+	write16(checksum, buf + pos);
 }

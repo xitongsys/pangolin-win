@@ -33,5 +33,8 @@ int UDP::write(uint8_t* buf, int max_size) {
 }
 
 string UDP::to_string() {
-	return NULL;
+	char fmt[] = "src_port: %u\ndst_port: %u\nlen: %u\nchecksum: %X\n";
+	char buf[1024];
+	sprintf_s(buf, 1024, fmt, src_port, dst_port, len, checksum);
+	return buf;
 }
