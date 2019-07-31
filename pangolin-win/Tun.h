@@ -15,6 +15,7 @@ public:
 	bool start();
 	vector<uint8_t> read();
 	bool write(vector<uint8_t>& data);
+	bool write_test(vector<uint8_t>& data);
 
 private:
 	string adname;

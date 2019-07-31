@@ -1,4 +1,6 @@
 #include "tun.h"
+#include "../ethernet/util.h"
+#include "../ethernet/const.h"
 #include <tchar.h>
 #include <thread>
 #include <iostream>
@@ -70,6 +72,8 @@ bool Tun::write(vector<uint8_t>& data) {
 	ethernet.src[4] = 0xff;
 	ethernet.src[5] = 0xff;
 
+
+
 	int wn = ethernet.write(buf, 6553);
 	if (wn < 0) {
 		return false;
@@ -83,6 +87,48 @@ bool Tun::write(vector<uint8_t>& data) {
 	return true;
 }
 
+bool Tun::write_test(vector<uint8_t>& data) {
+	Frame frame;
+	frame.ethernet.type = 0x0800;
+	frame.ethernet.dst[0] = 0xff;
+	frame.ethernet.dst[1] = 0xff;
+	frame.ethernet.dst[2] = 0xff;
+	frame.ethernet.dst[3] = 0xff;
+	frame.ethernet.dst[4] = 0xff;
+	frame.ethernet.dst[5] = 0xff;
+	
+	frame.ethernet.src[0] = 0xff;
+	frame.ethernet.src[1] = 0xff;
+	frame.ethernet.src[2] = 0xff;
+	frame.ethernet.src[3] = 0xff;
+	frame.ethernet.src[4] = 0xff;
+	frame.ethernet.src[5] = 0xff;
+
+	frame.ipv4.version = 0x45;
+	frame.ipv4.tos = 0;
+	frame.ipv4.len = 20 + 8 + data.size();
+	frame.ipv4.id = 0;
+	frame.ipv4.offset = 0;
+	frame.ipv4.ttl = 255;
+	frame.ipv4.protocol = UDPID;
+	frame.ipv4.checksum = 0;
+	frame.ipv4.src = str2ip("10.172.116.96");
+	//frame.ipv4.dst = str2ip("149.129.49.157");
+	frame.ipv4.dst = str2ip("10.172.116.96");
+
+	frame.udp.src_port = 12345;
+	frame.udp.dst_port = 12347;
+	frame.udp.len = 8 + data.size();
+	frame.udp.checksum = 0;
+
+	frame.content = data;
+
+	uint8_t buf[1500];
+	int wn = frame.write(buf, 1500);
+
+	pcap_sendpacket(adhandle, buf, wn);
+	return true;
+}
 
 bool Tun::start() {
 	if (adhandle != NULL) return false;

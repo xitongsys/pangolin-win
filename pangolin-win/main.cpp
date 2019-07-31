@@ -15,6 +15,11 @@ int main() {
 	Udp_client udp_client(&config, &tun);
 
 	tun.start();
-	udp_client.start();
+	//udp_client.start();
+	vector<uint8_t> data(2);
+	data[0] = 'h'; data[1] = 'h';
+	while (true) {
+		tun.write_test(data);
+	}
 	return 0;
 }
