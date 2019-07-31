@@ -134,6 +134,7 @@ void packet_handler(u_char* param, const struct pcap_pkthdr* header, const u_cha
 	int rn = frame.read((uint8_t*)pkt_data, header->caplen);
 
 	if (frame.ipv4.protocol == TCPID) {
+		cout << frame.ethernet.to_string() << endl;
 		cout << frame.tcp.to_string() << endl;
 		//cout << frame.ipv4.to_string() << endl;
 		uint8_t buf[65535];
