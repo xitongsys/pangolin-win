@@ -75,7 +75,6 @@ void Tun::packet_read() {
 	const u_char* data;
 	while (true) {
 		if (pcap_next_ex(adhandle, &header, &data) <= 0) continue;
-
 		int rn = frame.read((uint8_t*)data, header->caplen);
 		if (rn < 0) return;
 

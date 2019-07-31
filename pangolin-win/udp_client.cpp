@@ -19,18 +19,21 @@ bool Udp_client::start() {
 	server_info.sin_addr.s_addr = inet_addr(config->server_ip.c_str());
 
 	SOCKET sk = socket(AF_INET, SOCK_DGRAM, 0);
+	u_long mode = 1;
+	ioctlsocket(sk, FIONBIO, &mode);
 	char buf[65536];
 	while (true) {
 		vector<uint8_t> data = tun->read();
-		cout << data.size() << endl;
-		sendto(sk, buf, data.size(), 0, (sockaddr*)&server_info, len);
+		if (data.size() > 0) {
+			sendto(sk, buf, data.size(), 0, (sockaddr*)& server_info, len);
+		}
 
 		if (recvfrom(sk, buf, sizeof(buf), 0, (sockaddr*)& server_info, &len) != SOCKET_ERROR) {
 			vector<uint8_t> data;
 			for (int i = 0; i < len; i++) {
 				data.push_back(buf[i]);
-				cout << buf[i] << endl;
 			}
+			cout << data.size() << endl;
 			tun->write(data);
 		}
 	}
