@@ -1,6 +1,7 @@
 #include "tun.h"
 #include <tchar.h>
 #include <thread>
+#include <iostream>
 
 BOOL LoadNpcapDlls()
 {
@@ -60,11 +61,12 @@ bool Tun::start() {
 		1000,
 		NULL,
 		errbuf)) == NULL) {
-		return -1;
+		return false;
 	}
 
-	thread read_thread(&Tun::packet_read, this);
-	thread write_thread(&Tun::packet_write, this);
+	read_thread = new thread(&Tun::packet_read, this);
+	write_thread = new thread(&Tun::packet_write, this);
+	return true;
 }
 
 void Tun::packet_read() {
@@ -76,6 +78,7 @@ void Tun::packet_read() {
 
 		int rn = frame.read((uint8_t*)data, header->caplen);
 		if (rn < 0) return;
+
 		int b = frame.ethernet.header_length();
 		vector<uint8_t> vs;
 		for (int i = b; i < header->caplen; i++) {
@@ -89,7 +92,7 @@ void Tun::packet_write() {
 	Frame frame;
 	struct pcap_pkthdr* header;
 	const u_char* data;
-	uint8_t buf[65536];
+	uint8_t buf[6553];
 
 	while (true) {
 		vector<uint8_t> vs = _read();
@@ -111,7 +114,7 @@ void Tun::packet_write() {
 		ethernet.src[4] = 0xff;
 		ethernet.src[5] = 0xff;
 
-		int wn = ethernet.write(buf, 65536);
+		int wn = ethernet.write(buf, 6553);
 		if (wn < 0) continue;
 		for (int i = 0; i < vs.size(); i++, wn++) {
 			buf[wn] = vs[i];

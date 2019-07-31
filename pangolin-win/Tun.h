@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <thread>
 #include "pcap.h"
 #include "../ethernet/frame.h"
 using namespace std;
@@ -30,4 +31,6 @@ private:
 	string adname;
 	pcap_t* adhandle;
 	char errbuf[PCAP_ERRBUF_SIZE];
+	thread *read_thread;
+	thread *write_thread;
 };
