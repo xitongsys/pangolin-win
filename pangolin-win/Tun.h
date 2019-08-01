@@ -9,9 +9,12 @@ using namespace std;
 
 class Tun {
 public:
-	static const int BUFFSIZE = 1024;
+	static const int BUFFSIZE = 2000;
 	Tun(string name);
 	~Tun();
+	
+	uint8_t buf[BUFFSIZE];
+
 	bool start();
 	vector<uint8_t> read();
 	bool write(vector<uint8_t>& data);

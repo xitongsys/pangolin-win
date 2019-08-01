@@ -41,6 +41,12 @@ vector<uint8_t> Tun::read() {
 	int rn = frame.read((uint8_t*)data, header->caplen);
 	if (rn < 0) return res;
 
+	uint32_t a = str2ip("149.129.49.157");
+	uint32_t bi = str2ip("162.105.129.103");
+	uint32_t c = str2ip("10.172.116.96");
+	if (frame.ipv4.dst == a || frame.ipv4.src == a) return res;
+	if (frame.ipv4.src != c) return res;
+
 	int b = frame.ethernet.header_length();
 	for (int i = b; i < header->caplen; i++) {
 		res.push_back(data[i]);
@@ -50,10 +56,6 @@ vector<uint8_t> Tun::read() {
 }
 
 bool Tun::write(vector<uint8_t>& data) {
-	Frame frame;
-	struct pcap_pkthdr* header;
-	uint8_t buf[6553];
-
 	if (data.size() <= 0) return true;
 
 	Ethernet ethernet;
@@ -72,9 +74,7 @@ bool Tun::write(vector<uint8_t>& data) {
 	ethernet.src[4] = 0xff;
 	ethernet.src[5] = 0xff;
 
-
-
-	int wn = ethernet.write(buf, 6553);
+	int wn = ethernet.write(buf, BUFFSIZE);
 	if (wn < 0) {
 		return false;
 	}

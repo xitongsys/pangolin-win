@@ -33,14 +33,14 @@ bool Udp_client::start() {
 	u_long mode = 1;
 	ioctlsocket(sk, FIONBIO, &mode);
 	char buf[2500];
+
 	while (true) {
 		vector<uint8_t> data = tun->read();
-		if (data.size() > 0) {
+		if (data.size() > 0 && data.size() < 2500) {
 			for (int i = 0; i < data.size(); i++) {
 				buf[i] = data[i];
 			}
 			sendto(sk, buf, data.size(), 0, (sockaddr*)& server_info, sizeof(sockaddr));
-			//cout << "send  "<<data.size() << endl;
 		}
 
 		int rl = recvfrom(sk, buf, 2500, 0, (sockaddr*)& server_info, &len);
