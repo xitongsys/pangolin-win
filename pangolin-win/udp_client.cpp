@@ -32,7 +32,7 @@ bool Udp_client::start() {
 
 	u_long mode = 1;
 	ioctlsocket(sk, FIONBIO, &mode);
-	char buf[65536];
+	char buf[2500];
 	while (true) {
 		vector<uint8_t> data = tun->read();
 		if (data.size() > 0) {
@@ -40,14 +40,17 @@ bool Udp_client::start() {
 				buf[i] = data[i];
 			}
 			sendto(sk, buf, data.size(), 0, (sockaddr*)& server_info, sizeof(sockaddr));
-			cout << "send  "<<data.size() << endl;
+			//cout << "send  "<<data.size() << endl;
 		}
 
-		if (recvfrom(sk, buf, sizeof(buf), 0, (sockaddr*)& server_info, &len) != SOCKET_ERROR) {
+		int rl = recvfrom(sk, buf, 2500, 0, (sockaddr*)& server_info, &len);
+		if (rl > 0){
 			vector<uint8_t> data;
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i < rl; i++) {
 				data.push_back(buf[i]);
+				printf("%X ", data[i]);
 			}
+			cout << endl;
 			cout << "recv  " << data.size() << endl;
 			tun->write(data);
 		}
