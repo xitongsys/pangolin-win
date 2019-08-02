@@ -90,22 +90,26 @@ int Frame::write(int layer, uint8_t* buf, int max_size) {
 		write8(content[i], buf + p); p++;
 	}
 
-	int header_len = ethernet.header_length() + ipv4.header_length();
+	int header_len = 0;
+	if (layer <= 2) {
+		header_len += ethernet.header_length();
+	}
+	header_len += ipv4.header_length();
 
 	if (ipv4.protocol == TCPID) {
 		int checksum_pos = header_len + 16;
-		set_checksum(buf, checksum_pos, p);
+		set_checksum(layer, buf, checksum_pos, p);
 	}
 	else if (ipv4.protocol == UDPID) {
 		int checksum_pos = header_len + 6;
-		set_checksum(buf, checksum_pos, p);
+		set_checksum(layer, buf, checksum_pos, p);
 	}
 
 	return p;
 }
 
 
-void Frame::set_checksum(uint8_t* buf, int pos, int size) {
+void Frame::set_checksum(int layer, uint8_t* buf, int pos, int size) {
 	IPv4Pseudo ipv4p;
 	ipv4p.src = ipv4.src;
 	ipv4p.dst = ipv4.dst;
@@ -127,8 +131,13 @@ void Frame::set_checksum(uint8_t* buf, int pos, int size) {
 	for (int i = 0; i < ipv4p.header_length(); i += 2) {
 		s += read16(ipv4p_buf + i);
 	}
+	
+	int prefix_pos = 0;
+	if (layer <= 2) {
+		prefix_pos += ethernet.header_length();
+	}
+	prefix_pos += ipv4.header_length();
 
-	int prefix_pos = ethernet.header_length() + ipv4.header_length();
 	for (int i = prefix_pos; i < size - 1; i += 2) {
 		s += read16(buf + i);
 	}

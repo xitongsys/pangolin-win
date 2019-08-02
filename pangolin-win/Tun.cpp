@@ -6,58 +6,56 @@
 #include <iostream>
 
 
-Tun::Tun() {
+Tun::Tun(string server) {
 	handle = NULL;
+	this->server = server;
 }
 
 Tun::~Tun(){}
 
 vector<uint8_t> Tun::read() {
 	vector<uint8_t> res;
-	Frame frame;
-	UINT rn = 0, wn = 0;
+	UINT rn = 0;
 	WINDIVERT_ADDRESS addr;
 	if(!WinDivertRecv(handle, buf, BUFFSIZE, &rn, &addr)) {
 		return res;
 	}
-
-	rn = frame.read(3, buf, rn);
-	if (rn <= 0) {
-		return res;
-	}
-
-	cout << frame.ipv4.to_string()<<frame.tcp.to_string() << endl;
-
-	uint32_t a = str2ip("149.129.49.157");
-	uint32_t bi = str2ip("162.105.129.103");
-	uint32_t c = str2ip("10.172.116.96");
-	if (frame.ipv4.dst == a || frame.ipv4.src == a) {
-		WinDivertSend(handle, buf, rn, &wn, &addr);
-		return res;
-	}
-	if (frame.ipv4.src != c) return res;
-
-	int b = frame.ethernet.header_length();
-	wn = frame.write(3, buf, BUFFSIZE);
-	for (int i = b; i < wn; i++) {
+	
+	for (int i = 0; i < rn; i++) {
 		res.push_back(buf[i]);
 	}
-
 	return res;
 }
 
 bool Tun::write(vector<uint8_t>& data) {
-
 	for (int i = 0; i < data.size(); i++) {
 		buf[i] = data[i];
 	}
+	Frame frame;
+	int rn = frame.read(3, buf, BUFFSIZE);
+	if (rn <= 0) return false;
+	rn = frame.write(3, buf, BUFFSIZE);
+
+	UINT wn = 0;
+	WINDIVERT_ADDRESS addr;
+	addr.Layer = WINDIVERT_LAYER_NETWORK;
+	addr.Impostor = 1;
+	addr.Loopback = 0;
+	addr.Outbound = 0;
+	addr.IPChecksum = 1;
+	addr.TCPChecksum = 1;
+	addr.UDPChecksum = 1;
+	addr.Network.IfIdx = 14;
+	addr.Network.SubIfIdx = 0;
+	WinDivertSend(handle, buf, rn, &wn, &addr);
 
 	return true;
 }
 
-
-
 bool Tun::start() {
-	handle = WinDivertOpen("true", WINDIVERT_LAYER_NETWORK, 0, 0);
+	char fmt[] = "ip.SrcAddr != %s and ip.DstAddr != %s and !loopback";
+	char filter[1024];
+	sprintf_s(filter, 1024, fmt, server.c_str(), server.c_str());
+	handle = WinDivertOpen(filter, WINDIVERT_LAYER_NETWORK, 0, 0);
 	return !(handle == INVALID_HANDLE_VALUE);
 }

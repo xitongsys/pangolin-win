@@ -8,17 +8,16 @@ using namespace std;
 
 int main() {
 	cout << "welcome to pangolin" << endl;
-	//Config config("config.txt");
-	//cout << config.to_string() << endl;
-	Tun tun;
-	//Udp_client udp_client(&config, &tun);
+	Config config("config.txt");
+	cout << config.to_string() << endl;
+	Tun tun(config.server_ip);
+	Udp_client udp_client(&config, &tun);
 
-	tun.start();
-	while (true) {
-		tun.read();
+	if (!tun.start()) {
+		exit(1);
 	}
-	//udp_client.start();
 
+	udp_client.start();
 
 	return 0;
 }

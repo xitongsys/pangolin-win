@@ -22,5 +22,5 @@ public:
 	int write(int layer, uint8_t* buf, int max_size);
 
 private:
-	void set_checksum(uint8_t* buf, int pos, int size);
+	void set_checksum(int layer, uint8_t* buf, int pos, int size);
 };

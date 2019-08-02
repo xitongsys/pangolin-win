@@ -148,7 +148,6 @@
     <ClCompile Include="frame.cpp" />
     <ClCompile Include="ipv4.cpp" />
     <ClCompile Include="ipv4pseudo.cpp" />
-    <ClCompile Include="t1.cpp" />
     <ClCompile Include="tcp.cpp" />
     <ClCompile Include="udp.cpp" />
     <ClCompile Include="util.cpp" />
