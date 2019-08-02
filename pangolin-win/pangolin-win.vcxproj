@@ -76,12 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\App\npcap-sdk-1.03\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\App\npcap-sdk-1.03\Include;D:\App\WinDivert-2.0.1-rc-A\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);D:\App\npcap-sdk-1.03\Lib\*.lib;D:\App\mylib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);D:\App\npcap-sdk-1.03\Lib\*.lib;D:\App\mylib\*.lib; D:\App\WinDivert-2.0.1-rc-A\x86\*.lib;</AdditionalDependencies>
       <StackReserveSize>1024000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
@@ -105,14 +105,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\App\npcap-sdk-1.03\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\App\npcap-sdk-1.03\Include;D:\App\WinDivert-2.0.1-rc-A\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);D:\App\npcap-sdk-1.03\Lib\*.lib;D:\App\mylib\*.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);D:\App\npcap-sdk-1.03\Lib\*.lib;D:\App\mylib\*.lib; D:\App\WinDivert-2.0.1-rc-A\x86\*.lib;</AdditionalDependencies>
       <StackReserveSize>1024000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>

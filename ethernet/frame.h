@@ -18,8 +18,8 @@ public:
 
 public:
 	Frame();
-	int read(uint8_t* buf, int max_size);
-	int write(uint8_t* buf, int max_size);
+	int read(int layer, uint8_t* buf, int max_size);
+	int write(int layer, uint8_t* buf, int max_size);
 
 private:
 	void set_checksum(uint8_t* buf, int pos, int size);

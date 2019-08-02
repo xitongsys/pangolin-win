@@ -8,14 +8,17 @@ using namespace std;
 
 int main() {
 	cout << "welcome to pangolin" << endl;
-	Config config("config.txt");
-	cout << config.to_string() << endl;
-	//Tun tun("rpcap://\Device\NPF_{42111D9E-5D8B-47F4-88A1-5D8C66700C8D}");
-	Tun tun("rpcap://\\Device\\NPF_{BFFE366C-363D-41B9-8599-C92FADBF22C6}");
-	Udp_client udp_client(&config, &tun);
+	//Config config("config.txt");
+	//cout << config.to_string() << endl;
+	Tun tun;
+	//Udp_client udp_client(&config, &tun);
 
 	tun.start();
-	udp_client.start();
+	while (true) {
+		tun.read();
+	}
+	//udp_client.start();
+
 
 	return 0;
 }

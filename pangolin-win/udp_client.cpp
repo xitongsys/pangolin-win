@@ -1,5 +1,6 @@
 #include "udp_client.h"
-#include <WinSock2.h>
+#include "tun.h"
+#include <WinSock.h>
 #include <iostream>
 using namespace std;
 
@@ -23,7 +24,7 @@ bool Udp_client::start() {
 	memset(&server_info, 0, len);
 	server_info.sin_family = AF_INET;
 	server_info.sin_port = htons(config->server_port);
-	inet_pton(AF_INET, config->server_ip.c_str(), (void*)& server_info.sin_addr.S_un.S_addr);
+	//inet_pton(AF_INET, config->server_ip.c_str(), (void*)& server_info.sin_addr.S_un.S_addr);
 
 	SOCKET sk = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sk == SOCKET_ERROR) {

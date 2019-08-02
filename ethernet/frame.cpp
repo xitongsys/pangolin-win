@@ -12,14 +12,16 @@ Frame::Frame() {
 	content = vector<uint8_t>(0);
 }
 
-int Frame::read(uint8_t* buf, int max_size) {
+int Frame::read(int layer, uint8_t* buf, int max_size) {
 	content = vector<uint8_t>(0);
 	int p = 0;
 	int rn = 0;
 
-	rn = ethernet.read(buf + p, max_size - p);
-	if (rn < 0) return -1;
-	p += rn;
+	if (layer <= 2) {
+		rn = ethernet.read(buf + p, max_size - p);
+		if (rn < 0) return -1;
+		p += rn;
+	}
 
 	rn = ipv4.read(buf + p, max_size - p);
 	if (rn < 0) return -1;
@@ -53,13 +55,15 @@ int Frame::read(uint8_t* buf, int max_size) {
 	return p;
 }
 
-int Frame::write(uint8_t* buf, int max_size) {
+int Frame::write(int layer, uint8_t* buf, int max_size) {
 	int p = 0;
 	int wn = 0;
 
-	wn = ethernet.write(buf + p, max_size - p);
-	if (wn < 0) return -1;
-	p += wn;
+	if (layer <= 2) {
+		wn = ethernet.write(buf + p, max_size - p);
+		if (wn < 0) return -1;
+		p += wn;
+	}
 
 	wn = ipv4.write(buf + p, max_size - p);
 	if (wn < 0) return -1;

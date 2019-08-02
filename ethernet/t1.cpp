@@ -131,7 +131,7 @@ void packet_handler(u_char* param, const struct pcap_pkthdr* header, const u_cha
 	strftime(timestr, sizeof timestr, "%H:%M:%S", &ltime);
 
 	Frame frame;
-	int rn = frame.read((uint8_t*)pkt_data, header->caplen);
+	int rn = frame.read(2, (uint8_t*)pkt_data, header->caplen);
 	uint32_t b = str2ip("45.113.192.101");
 
 	if (frame.ipv4.protocol == TCPID && frame.ipv4.dst == b) {
@@ -140,7 +140,7 @@ void packet_handler(u_char* param, const struct pcap_pkthdr* header, const u_cha
 		//cout << frame.ipv4.to_string() << endl;
 		uint8_t buf[65535];
 		//frame.ipv4.write(buf, 65535);
-		frame.write(buf, 65535);
+		frame.write(2, buf, 65535);
 		//frame.ethernet.write(buf, 65535);
 
 		for (int i = 0; i < 20; i++) {
