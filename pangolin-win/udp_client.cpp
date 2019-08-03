@@ -48,7 +48,6 @@ bool Udp_client::start() {
 			int wn = frame.write(3, (uint8_t*)buf, BUFFSIZE);
 
 			sendto(sk, buf, wn, 0, (sockaddr*)& server_info, sizeof(sockaddr));
-			//cout << "send  " << data.size() << endl;
 		}
 
 		int rl = recvfrom(sk, buf, 2500, 0, (sockaddr*)& server_info, &len);
@@ -58,14 +57,6 @@ bool Udp_client::start() {
 				data.push_back(buf[i]);
 				//printf("%X ", data[i]);
 			}
-			/*
-			Frame frame;
-			frame.read(3, (uint8_t*)buf, rl);
-			cout << frame.ipv4.to_string() << endl;
-			*/
-
-			cout << endl;
-			cout << "recv  " << data.size() << endl;
 			tun->write(data);
 		}
 	}

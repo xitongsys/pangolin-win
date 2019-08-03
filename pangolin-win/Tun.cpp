@@ -54,8 +54,7 @@ bool Tun::write(vector<uint8_t>& data) {
 	addr.Network.IfIdx = config->gateway->ifIndex;
 	addr.Network.SubIfIdx = 0;
 	//cout << "checksum"<< WinDivertHelperCalcChecksums(buf, rn, &addr, 0) << endl;
-	cout << "====" << WinDivertSend(handle, buf, rn, &wn, &addr) << endl;
-
+	WinDivertSend(handle, buf, rn, &wn, &addr);
 	return true;
 }
 

@@ -49,8 +49,8 @@ Config::Config(string fname) {
 	system(buf);
 
 	//set dns to 1.1.1.1
-	char dns_fmt[] = "netsh interface ipv4 set dnsservers %d static 1.1.1.1 primary";
-	sprintf_s(buf, dns_fmt, gateway->ifIndex);
+	char dns_fmt[] = "netsh interface ipv4 set dnsservers %d static %s primary";
+	sprintf_s(buf, dns_fmt, gateway->ifIndex, dns.c_str());
 	system(buf);
 }
 
