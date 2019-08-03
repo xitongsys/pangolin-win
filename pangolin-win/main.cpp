@@ -17,9 +17,5 @@ int main() {
 	}
 
 	udp_client.start();
-
-	Route route;
-	cout << route.toString() << endl;
-
 	return 0;
 }
