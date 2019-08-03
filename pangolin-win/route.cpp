@@ -59,7 +59,7 @@ Route::Route() {
 
 RouteItem* Route::getRoute(uint32_t dst) {
 	int ln = routes.size();
-	for (int i = ln - 1; i >= 0; i++) {
+	for (int i = ln - 1; i >= 0; i--) {
 		if ((dst & routes[i].mask) == routes[i].dst) {
 			return &routes[i];
 		}

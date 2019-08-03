@@ -15,6 +15,7 @@ public:
 	string protocol;
 	string token;
 	string tunip;
+	string dns;
 
 public:
 	Route route;

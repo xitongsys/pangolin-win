@@ -6,18 +6,24 @@
 #include <iostream>
 
 
-Tun::Tun(string server) {
+Tun::Tun(Config* config) {
 	handle = NULL;
-	this->server = server;
+	this->config = config;
+
 }
 
 Tun::~Tun(){}
 
 vector<uint8_t> Tun::read() {
 	vector<uint8_t> res;
-	UINT rn = 0;
+	UINT rn = 0, wn = 0;
 	WINDIVERT_ADDRESS addr;
 	if(!WinDivertRecv(handle, buf, BUFFSIZE, &rn, &addr)) {
+		return res;
+	}
+
+	if (addr.Network.IfIdx != config->gateway->ifIndex) {
+		WinDivertSend(handle, buf, rn, &wn, &addr);
 		return res;
 	}
 	
@@ -45,7 +51,7 @@ bool Tun::write(vector<uint8_t>& data) {
 	addr.IPChecksum = 1;
 	addr.TCPChecksum = 1;
 	addr.UDPChecksum = 1;
-	addr.Network.IfIdx = 16;
+	addr.Network.IfIdx = config->gateway->ifIndex;
 	addr.Network.SubIfIdx = 0;
 	//cout << "checksum"<< WinDivertHelperCalcChecksums(buf, rn, &addr, 0) << endl;
 	cout << "====" << WinDivertSend(handle, buf, rn, &wn, &addr) << endl;
@@ -56,7 +62,7 @@ bool Tun::write(vector<uint8_t>& data) {
 bool Tun::start() {
 	char fmt[] = "ip.SrcAddr != %s and ip.DstAddr != %s and !loopback";
 	char filter[1024];
-	sprintf_s(filter, 1024, fmt, server.c_str(), server.c_str());
+	sprintf_s(filter, 1024, fmt, config->server_ip.c_str(), config->server_ip.c_str());
 	handle = WinDivertOpen(filter, WINDIVERT_LAYER_NETWORK, 0, 0);
 	return !(handle == INVALID_HANDLE_VALUE);
 }

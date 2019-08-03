@@ -8,11 +8,10 @@ using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 
 int main() {
-	/*
 	cout << "welcome to pangolin" << endl;
 	Config config("config.txt");
 	cout << config.to_string() << endl;
-	Tun tun(config.server_ip);
+	Tun tun(&config);
 	Udp_client udp_client(&config, &tun);
 
 	if (!tun.start()) {
@@ -20,7 +19,6 @@ int main() {
 	}
 
 	udp_client.start();
-	*/
 
 	Route route;
 	cout << route.toString() << endl;
