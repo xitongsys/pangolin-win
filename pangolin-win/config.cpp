@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "../ethernet/util.h"
 using namespace std;
 using json = nlohmann::json;
 
@@ -16,6 +17,8 @@ Config::Config(string fname) {
 		i++;
 	}
 
+	tunip = j.value("tun", "10.0.0.111");
+
 	if (i < server_addr.size()) {
 		server_ip = server_addr.substr(0, i);
 		stringstream ss; ss << server_addr.substr(i + 1, server_addr.size());
@@ -28,12 +31,20 @@ Config::Config(string fname) {
 		token = *it;
 		break;
 	}
+
+	uint32_t sip = str2ip(server_ip);
+	RouteItem* it = route.getRoute(sip);
+	if (it == NULL) {
+		cout << "can't get route to server" << endl;
+		exit(-1);
+	}
+	gateway = it;
 }
 
 string Config::to_string() {
-	char fmt[] = "role: %s\nserver_ip: %s\nserver_port: %d\nprotocol: %s\ntoken: %s\n";
+	char fmt[] = "role: %s\nserver_ip: %s\nserver_port: %d\nprotocol: %s\ntoken: %s\nroute: %s\n";
 	char buf[1024];
-	sprintf_s(buf, 1024, fmt, role.c_str(), server_ip.c_str(), server_port, protocol.c_str(), token.c_str());
+	sprintf_s(buf, 1024, fmt, role.c_str(), server_ip.c_str(), server_port, protocol.c_str(), token.c_str(), route.toString().c_str());
 	return buf;
 }
 

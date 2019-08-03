@@ -11,5 +11,6 @@ void write16(uint16_t v, uint8_t* buf);
 void write32(uint32_t v, uint8_t* buf);
 void write64(uint64_t v, uint8_t* buf);
 
+uint32_t revIp(uint32_t ip);
 string ip2str(uint32_t ip);
 uint32_t str2ip(string s);

@@ -45,9 +45,10 @@ bool Tun::write(vector<uint8_t>& data) {
 	addr.IPChecksum = 1;
 	addr.TCPChecksum = 1;
 	addr.UDPChecksum = 1;
-	addr.Network.IfIdx = 14;
+	addr.Network.IfIdx = 16;
 	addr.Network.SubIfIdx = 0;
-	WinDivertSend(handle, buf, rn, &wn, &addr);
+	//cout << "checksum"<< WinDivertHelperCalcChecksums(buf, rn, &addr, 0) << endl;
+	cout << "====" << WinDivertSend(handle, buf, rn, &wn, &addr) << endl;
 
 	return true;
 }

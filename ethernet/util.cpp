@@ -63,6 +63,15 @@ void write64(uint64_t v, uint8_t* buf) {
 	buf[7] = (uint8_t)(v >> 0) & 0xff;
 }
 
+uint32_t revIp(uint32_t ip) {
+	uint32_t res = 0;
+	res |= (ip & 0xff000000) >> 24;
+	res |= (ip & 0xff0000) >> 8;
+	res |= (ip & 0xff00) << 8;
+	res |= (ip & 0xff) << 24;
+	return res;
+}
+
 string ip2str(uint32_t ip) {
 	char fmt[] = "%d.%d.%d.%d";
 	char buf[16];

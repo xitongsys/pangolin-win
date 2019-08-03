@@ -3,10 +3,12 @@
 #include "tun.h"
 #include "udp_client.h"
 #include "config.h"
+#include "route.h"
 using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 
 int main() {
+	/*
 	cout << "welcome to pangolin" << endl;
 	Config config("config.txt");
 	cout << config.to_string() << endl;
@@ -18,6 +20,10 @@ int main() {
 	}
 
 	udp_client.start();
+	*/
+
+	Route route;
+	cout << route.toString() << endl;
 
 	return 0;
 }
