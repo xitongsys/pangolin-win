@@ -15,7 +15,8 @@ public:
 	~Tun();
 	
 	HANDLE handle;
-	uint8_t buf[BUFFSIZE];
+	uint8_t read_buf[BUFFSIZE];
+	uint8_t write_buf[BUFFSIZE];
 	Config* config;
 
 	bool start();

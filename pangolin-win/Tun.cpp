@@ -19,24 +19,24 @@ vector<uint8_t> Tun::read() {
 	UINT rn = 0, wn = 0;
 	WINDIVERT_ADDRESS addr;
 	UINT addrLen = sizeof(addr);
-	if(!WinDivertRecvEx(handle, buf, BUFFSIZE, &rn, 0, &addr, &addrLen, NULL)) {
+	if(!WinDivertRecvEx(handle, read_buf, BUFFSIZE, &rn, 0, &addr, &addrLen, NULL)) {
 		return res;
 	}
 	
 	for (int i = 0; i < rn; i++) {
-		res.push_back(buf[i]);
+		res.push_back(read_buf[i]);
 	}
 	return res;
 }
 
 bool Tun::write(vector<uint8_t>& data) {
 	for (int i = 0; i < data.size(); i++) {
-		buf[i] = data[i];
+		write_buf[i] = data[i];
 	}
 	Frame frame;
-	int rn = frame.read(3, buf, BUFFSIZE);
+	int rn = frame.read(3, write_buf, BUFFSIZE);
 	if (rn <= 0) return false;
-	rn = frame.write(3, buf, BUFFSIZE);
+	rn = frame.write(3, write_buf, BUFFSIZE);
 
 	UINT wn = 0;
 	WINDIVERT_ADDRESS addr;
@@ -50,7 +50,7 @@ bool Tun::write(vector<uint8_t>& data) {
 	addr.Network.IfIdx = config->gateway->ifIndex;
 	addr.Network.SubIfIdx = 0;
 	//cout << "checksum"<< WinDivertHelperCalcChecksums(buf, rn, &addr, 0) << endl;
-	WinDivertSendEx(handle, buf, rn, &wn, 0, &addr, sizeof(addr), NULL);
+	WinDivertSendEx(handle, write_buf, rn, &wn, 0, &addr, sizeof(addr), NULL);
 	return true;
 }
 
