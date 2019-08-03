@@ -1,10 +1,4 @@
-#include <WinSock2.h>
-#include <WS2tcpip.h>
 #include "udp_client.h"
-#include "tun.h"
-#include "../ethernet/util.h"
-#include <iostream>
-using namespace std;
 
 Udp_client::Udp_client(Config *config, Tun* tun) {
 	this->config = config;
@@ -22,14 +16,13 @@ bool Udp_client::start() {
 		return false;
 	}
 
-	struct sockaddr_in server_info;
 	int len = sizeof(server_info);
 	memset(&server_info, 0, len);
 	server_info.sin_family = AF_INET;
 	server_info.sin_port = htons(config->server_port);
 	inet_pton(AF_INET, config->server_ip.c_str(), (void*)& server_info.sin_addr.S_un.S_addr);
 
-	SOCKET sk = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	sk = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sk == SOCKET_ERROR) {
 		return false;
 	}
@@ -37,24 +30,37 @@ bool Udp_client::start() {
 	u_long mode = 1;
 	ioctlsocket(sk, FIONBIO, &mode);
 
+	thread send_thread(&Udp_client::send, this);
+	thread recv_thread(&Udp_client::recv, this);
+
+	send_thread.join();
+	recv_thread.join();
+}
+
+void Udp_client::send() {
 	while (true) {
 		vector<uint8_t> data = tun->read();
 		if (data.size() > 0 && data.size() < BUFFSIZE) {
 			for (int i = 0; i < data.size(); i++) {
-				buf[i] = data[i];
+				send_buf[i] = data[i];
 			}
 			Frame frame;
-			if (frame.read(3, (uint8_t*)buf, BUFFSIZE) <= 0) continue;
-			int wn = frame.write(3, (uint8_t*)buf, BUFFSIZE);
+			if (frame.read(3, (uint8_t*)send_buf, BUFFSIZE) <= 0) continue;
+			int wn = frame.write(3, (uint8_t*)send_buf, BUFFSIZE);
 
-			sendto(sk, buf, wn, 0, (sockaddr*)& server_info, sizeof(sockaddr));
+			sendto(sk, send_buf, wn, 0, (sockaddr*)& server_info, sizeof(sockaddr));
 		}
+	}
+}
 
-		int rl = recvfrom(sk, buf, 2500, 0, (sockaddr*)& server_info, &len);
-		if (rl > 0){
+void Udp_client::recv() {
+	int len = sizeof(server_info);
+	while (true) {
+		int rl = recvfrom(sk, recv_buf, 2500, 0, (sockaddr*)& server_info, &len);
+		if (rl > 0) {
 			vector<uint8_t> data;
 			for (int i = 0; i < rl; i++) {
-				data.push_back(buf[i]);
+				data.push_back(recv_buf[i]);
 				//printf("%X ", data[i]);
 			}
 			tun->write(data);

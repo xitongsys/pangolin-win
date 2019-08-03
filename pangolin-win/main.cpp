@@ -1,9 +1,7 @@
 #include <cstdio>
 #include <iostream>
-#include "tun.h"
 #include "udp_client.h"
 #include "config.h"
-#include "route.h"
 using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 
