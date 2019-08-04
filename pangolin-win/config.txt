@@ -2,10 +2,8 @@
     "role": "client",
     "server": "149.129.49.157:12345",
     "tun": "10.0.0.22/8",
-    "tunname": "tun0",
-    "ptcpinterface": "eth0",
-    "dns": "1.1.1.1",
-    "mtu": 1200,
+    "dns": "8.8.8.8",
+    "mtu": 1400,
     "protocol": "udp",
     "tokens": ["token01", "token02"]
 }
