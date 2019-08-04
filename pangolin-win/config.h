@@ -14,7 +14,8 @@ public:
 	int server_port;
 	string protocol;
 	string token;
-	string tunip;
+	string tun;
+	uint32_t tunip;
 	string dns;
 
 public:

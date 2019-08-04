@@ -22,7 +22,16 @@ vector<uint8_t> Tun::read() {
 	if(!WinDivertRecvEx(handle, read_buf, BUFFSIZE, &rn, 0, &addr, &addrLen, NULL)) {
 		return res;
 	}
-	
+
+	Frame frame;
+	if (frame.read(3, read_buf, rn) <= 0) {
+		return res;
+	}
+	if (frame.ipv4.src == config->gateway->addr) {
+		frame.ipv4.src = config->tunip;
+	}
+	rn = frame.write(3, read_buf, BUFFSIZE);
+
 	for (int i = 0; i < rn; i++) {
 		res.push_back(read_buf[i]);
 	}
@@ -36,6 +45,9 @@ bool Tun::write(vector<uint8_t>& data) {
 	Frame frame;
 	int rn = frame.read(3, write_buf, BUFFSIZE);
 	if (rn <= 0) return false;
+	if (frame.ipv4.dst == config->tunip) {
+		frame.ipv4.dst = config->gateway->addr;
+	}
 	rn = frame.write(3, write_buf, BUFFSIZE);
 
 	UINT wn = 0;

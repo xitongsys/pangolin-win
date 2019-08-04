@@ -7,11 +7,11 @@ using namespace std;
 
 class RouteItem {
 public:
-	uint32_t dst, mask, next;
+	uint32_t addr, dst, mask, next;
 	int ifIndex;
 
 	RouteItem();
-	RouteItem(uint32_t dst, uint32_t mask, uint32_t next, int if_index);
+	RouteItem(uint32_t addr, uint32_t dst, uint32_t mask, uint32_t next, int if_index);
 };
 
 class Route {

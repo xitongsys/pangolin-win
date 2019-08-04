@@ -4,7 +4,7 @@
     "tun": "10.0.0.22/8",
     "tunname": "tun0",
     "ptcpinterface": "eth0",
-    "dns": "8.8.8.8",
+    "dns": "1.1.1.1",
     "mtu": 1200,
     "protocol": "udp",
     "tokens": ["token01", "token02"]

@@ -10,10 +10,11 @@
 #pragma comment(lib, "ws2_32.lib")
 
 RouteItem::RouteItem() {
-	dst = 0; mask = 0; next = 0; ifIndex = 0;
+	addr = 0;  dst = 0; mask = 0; next = 0; ifIndex = 0;
 }
 
-RouteItem::RouteItem(uint32_t dst, uint32_t mask, uint32_t next, int ifIndex){
+RouteItem::RouteItem(uint32_t addr, uint32_t dst, uint32_t mask, uint32_t next, int ifIndex){
+	this->addr = addr;
 	this->dst = dst;
 	this->mask = mask;
 	this->next = next;
@@ -55,6 +56,46 @@ Route::Route() {
 		cout << "get route table error" << endl;
 		exit(-1);
 	}
+
+	PIP_ADAPTER_INFO p_adapter_info;
+	PIP_ADAPTER_INFO p_adapter;
+
+	ULONG len = sizeof(IP_ADAPTER_INFO);
+	p_adapter_info = (IP_ADAPTER_INFO*)malloc(sizeof(IP_ADAPTER_INFO));
+	if (p_adapter_info == NULL) {
+		cout << "can't get adapter info" << endl;
+		exit(-1);
+	}
+
+	if (GetAdaptersInfo(p_adapter_info, &len) == ERROR_BUFFER_OVERFLOW) {
+		free(p_adapter_info);
+		p_adapter_info = (IP_ADAPTER_INFO*)malloc(len);
+		if (p_adapter_info == NULL) {
+			cout << "can't get adapter info" << endl;
+			exit(-1);
+		}
+	}
+
+	if (GetAdaptersInfo(p_adapter_info, &len) == NO_ERROR) {
+		p_adapter = p_adapter_info;
+		while (p_adapter) {
+			int index = p_adapter->Index;
+			uint32_t ip = str2ip(p_adapter->IpAddressList.IpAddress.String);
+			for (int i = 0; i < routes.size(); i++) {
+				if (routes[i].ifIndex == index) {
+					routes[i].addr = ip;
+				}
+			}
+			p_adapter = p_adapter->Next;
+		}
+		free(p_adapter_info);
+	}
+	else {
+		free(p_adapter_info);
+		cout << "can't get adapter info" << endl;
+		exit(-1);
+	}
+
 }
 
 RouteItem* Route::getRoute(uint32_t dst) {
@@ -68,11 +109,12 @@ RouteItem* Route::getRoute(uint32_t dst) {
 }
 
 string Route::toString() {
-	char fmt[] = "dst: %s, mask: %s, next: %s, index: %d\n";
+	char fmt[] = "addr: %s, dst: %s, mask: %s, next: %s, index: %d\n";
 	char buf[1024];
 	string res = "";
 	for (int i = 0; i < routes.size(); i++) {
 		sprintf_s(buf, 1024, fmt, 
+			ip2str(routes[i].addr).c_str(),
 			ip2str(routes[i].dst).c_str(), 
 			ip2str(routes[i].mask).c_str(), 
 			ip2str(routes[i].next).c_str(), 

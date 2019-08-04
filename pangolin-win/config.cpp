@@ -17,7 +17,8 @@ Config::Config(string fname) {
 		i++;
 	}
 
-	tunip = j.value("tun", "10.0.0.111");
+	tun = j.value("tun", "10.0.0.111");
+	tunip = str2ip(tun);
 
 	dns = j.value("dns", "1.1.1.1");
 
