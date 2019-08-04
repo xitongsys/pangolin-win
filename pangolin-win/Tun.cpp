@@ -14,6 +14,28 @@ Tun::Tun(Config* config) {
 
 Tun::~Tun(){}
 
+vector<uint8_t> Tun::read_raw(WINDIVERT_ADDRESS* addr) {
+	vector<uint8_t> res;
+	UINT rn = 0;
+	UINT addrLen = sizeof(WINDIVERT_ADDRESS);
+	if (!WinDivertRecvEx(handle, read_buf, BUFFSIZE, &rn, 0, addr, &addrLen, NULL)) {
+		return res;
+	}
+	for (int i = 0; i < rn; i++) {
+		res.push_back(read_buf[i]);
+	}
+	return res;
+}
+
+bool Tun::write_raw(vector<uint8_t>& data, WINDIVERT_ADDRESS* addr) {
+	for (int i = 0; i < data.size(); i++) {
+		write_buf[i] = data[i];
+	}
+	UINT wn = data.size();
+	WinDivertSendEx(handle, write_buf, BUFFSIZE, &wn, 0, addr, sizeof(*addr), NULL);
+	return true;
+}
+
 vector<uint8_t> Tun::read() {
 	vector<uint8_t> res;
 	UINT rn = 0, wn = 0;

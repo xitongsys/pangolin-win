@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="config.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ptcp_client.cpp" />
     <ClCompile Include="route.cpp" />
     <ClCompile Include="tun.cpp" />
     <ClCompile Include="udp_client.cpp" />
@@ -144,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="ptcp_client.h" />
     <ClInclude Include="route.h" />
     <ClInclude Include="tun.h" />
     <ClInclude Include="udp_client.h" />

@@ -30,6 +30,9 @@
     <ClCompile Include="route.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ptcp_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tun.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="route.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ptcp_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

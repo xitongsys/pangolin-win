@@ -22,4 +22,7 @@ public:
 	bool start();
 	vector<uint8_t> read();
 	bool write(vector<uint8_t>& data);
+
+	vector<uint8_t> read_raw(WINDIVERT_ADDRESS* addr);
+	bool write_raw(vector<uint8_t>& data, WINDIVERT_ADDRESS* addr);
 };
