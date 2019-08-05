@@ -28,6 +28,8 @@ Config::Config(string fname) {
 		ss >> server_port;
 	}
 
+	server_ptcp_port = server_port + 1;
+
 	protocol = j.value("protocol", "udp");
 	auto tokens = j["tokens"];
 	for (auto it = tokens.begin(); it != tokens.end(); it++) {
@@ -47,18 +49,20 @@ Config::Config(string fname) {
 	char mtu_fmt[] = "netsh interface ipv4 set subinterface %d mtu=1400";
 	char buf[1024];
 	sprintf_s(buf, mtu_fmt, gateway->ifIndex);
+	printf("%s\n", buf);
 	system(buf);
 
 	//set dns to 1.1.1.1
 	char dns_fmt[] = "netsh interface ipv4 set dnsservers %d static %s primary";
 	sprintf_s(buf, dns_fmt, gateway->ifIndex, dns.c_str());
+	printf("%s\n", buf);
 	system(buf);
 }
 
 string Config::to_string() {
 	char fmt[] = "role: %s\nserver_ip: %s\nserver_port: %d\nprotocol: %s\ntoken: %s\nroute: %s\n";
-	char buf[2048];
-	sprintf_s(buf, 2048, fmt, role.c_str(), server_ip.c_str(), server_port, protocol.c_str(), token.c_str(), route.toString().c_str());
+	char buf[4096];
+	sprintf_s(buf, 4096, fmt, role.c_str(), server_ip.c_str(), server_port, protocol.c_str(), token.c_str(), route.toString().c_str());
 	return buf;
 }
 

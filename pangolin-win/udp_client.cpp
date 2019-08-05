@@ -47,7 +47,6 @@ void Udp_client::send() {
 			Frame frame;
 			if (frame.read(3, (uint8_t*)send_buf, BUFFSIZE) <= 0) continue;
 			int wn = frame.write(3, (uint8_t*)send_buf, BUFFSIZE);
-
 			sendto(sk, send_buf, wn, 0, (sockaddr*)& server_info, sizeof(sockaddr));
 		}
 	}

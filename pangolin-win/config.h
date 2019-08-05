@@ -12,6 +12,7 @@ public:
 	string server_addr;
 	string server_ip;
 	int server_port;
+	int server_ptcp_port;
 	string protocol;
 	string token;
 	string tun;

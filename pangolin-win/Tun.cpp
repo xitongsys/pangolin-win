@@ -95,3 +95,7 @@ bool Tun::start() {
 	handle = WinDivertOpen(filter, WINDIVERT_LAYER_NETWORK, 0, 0);
 	return !(handle == INVALID_HANDLE_VALUE);
 }
+
+bool Tun::stop() {
+	WinDivertClose(handle);
+}
