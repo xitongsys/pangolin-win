@@ -13,8 +13,14 @@ int main() {
 	cout << config.to_string() << endl;
 	Tun tun(&config);
 	Ptcp ptcp(&config);
-	Ptcp_client ptcp_client(&config, &ptcp, &tun);
-	ptcp_client.start();
 
+	if (config.protocol == "ptcp") {
+		Ptcp_client ptcp_client(&config, &ptcp, &tun);
+		ptcp_client.start();
+	}
+	else {
+		Udp_client udp_client(&config, &tun);
+		udp_client.start();
+	}
 	return 0;
 }

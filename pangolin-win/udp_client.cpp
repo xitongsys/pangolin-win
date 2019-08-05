@@ -10,6 +10,8 @@ Udp_client::~Udp_client() {
 
 
 bool Udp_client::start() {
+	if (!tun->start()) return false;
+
 	WORD socketVersion = MAKEWORD(2, 2);
 	WSADATA wsaData;
 	if (WSAStartup(socketVersion, &wsaData) != 0) {
