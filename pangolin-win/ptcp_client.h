@@ -7,6 +7,7 @@
 #include "config.h"
 #include "ptcp.h"
 #include "tun.h"
+#include "encrypt.h"
 #include "../ethernet/util.h"
 
 bool login_check(vector<uint8_t>& data);
@@ -20,6 +21,8 @@ public:
 	Config* config;
 	Ptcp* ptcp;
 	Tun* tun;
+	Encrypt* encrypt;
+
 	char send_buf[BUFFSIZE];
 	char recv_buf[BUFFSIZE];
 

@@ -76,8 +76,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\App\npcap-sdk-1.03\Include;C:\App\WinDivert-2.0.1-rc-A\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\App\npcap-sdk-1.03\Include;C:\App\WinDivert-2.0.1-rc-A\include;C:\App\cryptopp820</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,8 +107,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\App\npcap-sdk-1.03\Include;C:\App\WinDivert-2.0.1-rc-A\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\App\npcap-sdk-1.03\Include;C:\App\WinDivert-2.0.1-rc-A\include;C:\App\cryptopp820</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="config.cpp" />
+    <ClCompile Include="encrypt.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ptcp.cpp" />
     <ClCompile Include="ptcp_client.cpp" />
@@ -145,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
+    <ClInclude Include="encrypt.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="ptcp.h" />
     <ClInclude Include="ptcp_client.h" />

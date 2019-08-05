@@ -36,6 +36,9 @@
     <ClCompile Include="ptcp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="encrypt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tun.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ptcp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="encrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

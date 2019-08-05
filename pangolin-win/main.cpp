@@ -9,6 +9,7 @@ using namespace std;
 
 int main() {
 	cout << "welcome to pangolin" << endl;
+
 	Config config("config.txt");
 	cout << config.to_string() << endl;
 	Tun tun(&config);
