@@ -3,6 +3,7 @@
 #include <WS2tcpip.h>
 #include <cstdio>
 #include <iostream>
+#include <cstdint>
 #include <thread>
 #include "config.h"
 #include "ptcp.h"

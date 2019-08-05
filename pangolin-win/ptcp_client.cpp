@@ -32,16 +32,16 @@ void Ptcp_client::send() {
 			Frame frame;
 			if (frame.read(3, (uint8_t*)send_buf, BUFFSIZE) <= 0) continue;
 			int wn = frame.write(3, (uint8_t*)send_buf, BUFFSIZE);
-			string datas;
+			string datas = "";
 			for (int i = 0; i < wn; i++) {
-				datas.push_back(send_buf[i]);
+				datas.push_back((uint8_t)send_buf[i]);
 			}
 			string endata = encrypt->encrypt(datas);
 
 			vector<uint8_t> data;
 			data.push_back(Ptcp::PTCP_PACKETTYPE_DATA);
 			for (int i = 0; i < endata.size(); i++) {
-				data.push_back(endata[i]);
+				data.push_back((uint8_t)endata[i]);
 			}
 			ptcp->send(data);
 		}

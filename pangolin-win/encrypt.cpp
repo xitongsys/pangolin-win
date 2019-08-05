@@ -9,20 +9,18 @@ Encrypt::Encrypt(string key) {
 			key.push_back(0);
 		}
 	}
+
 	for (int i = 0; i < BLOCKSIZE; i++) {
 		this->key[i] = key[i];
 		this->iv[i] = key[i];
 	}
-
-	aesEncryption = CryptoPP::AES::Encryption(this->key, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	cbcEncryption = CryptoPP::CBC_Mode_ExternalCipher::Encryption(aesEncryption, this->iv);
-	aesDecryption = CryptoPP::AES::Decryption(this->key, CryptoPP::AES::DEFAULT_KEYLENGTH);
-	cbcDecryption = CryptoPP::CBC_Mode_ExternalCipher::Decryption(aesDecryption, this->iv);
 }
 
 Encrypt::~Encrypt() {}
 
 string Encrypt::encrypt(string& data) {
+	aesEncryption = CryptoPP::AES::Encryption(this->key, BLOCKSIZE);
+	cbcEncryption = CryptoPP::CBC_Mode_ExternalCipher::Encryption(aesEncryption, this->iv);
 	string res;
 	CryptoPP::StreamTransformationFilter stfEncryptor(cbcEncryption, new CryptoPP::StringSink(res));
 	stfEncryptor.Put(reinterpret_cast<const unsigned char*>(data.c_str()), data.length());
@@ -31,6 +29,8 @@ string Encrypt::encrypt(string& data) {
 }
 
 string Encrypt::decrypt(string& data) {
+	aesDecryption = CryptoPP::AES::Decryption(this->key, BLOCKSIZE);
+	cbcDecryption = CryptoPP::CBC_Mode_ExternalCipher::Decryption(aesDecryption, this->iv);
 	string res;
 	CryptoPP::StreamTransformationFilter stfDecryptor(cbcDecryption, new CryptoPP::StringSink(res));
 	stfDecryptor.Put(reinterpret_cast<const unsigned char*>(data.c_str()), data.size());
