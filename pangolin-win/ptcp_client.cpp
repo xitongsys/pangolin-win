@@ -1,38 +1,22 @@
 #include "Ptcp_client.h"
 
-Ptcp_client::Ptcp_client(Config* config, Tun* tun) {
+Ptcp_client::Ptcp_client(Config* config, Ptcp* ptcp, Tun* tun) {
 	this->config = config;
+	this->ptcp = ptcp;
 	this->tun = tun;
 }
 
 Ptcp_client::~Ptcp_client() {
 }
 
-
 bool Ptcp_client::start() {
-	WORD socketVersion = MAKEWORD(2, 2);
-	WSADATA wsaData;
-	if (WSAStartup(socketVersion, &wsaData) != 0) {
-		return false;
-	}
-
-	int len = sizeof(server_info);
-	memset(&server_info, 0, len);
-	server_info.sin_family = AF_INET;
-	server_info.sin_port = htons(config->server_port);
-	inet_pton(AF_INET, config->server_ip.c_str(), (void*)& server_info.sin_addr.S_un.S_addr);
-
-	sk = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (sk == SOCKET_ERROR) {
-		return false;
-	}
-
-	u_long mode = 1;
-	ioctlsocket(sk, FIONBIO, &mode);
+	if (!tun->start()) return false;
+	if (!ptcp->start()) return false;
+	if (!ptcp->dial()) return false;
+	if (!login()) return false;
 
 	thread send_thread(&Ptcp_client::send, this);
 	thread recv_thread(&Ptcp_client::recv, this);
-
 	send_thread.join();
 	recv_thread.join();
 }
@@ -48,7 +32,12 @@ void Ptcp_client::send() {
 			if (frame.read(3, (uint8_t*)send_buf, BUFFSIZE) <= 0) continue;
 			int wn = frame.write(3, (uint8_t*)send_buf, BUFFSIZE);
 
-			sendto(sk, send_buf, wn, 0, (sockaddr*)& server_info, sizeof(sockaddr));
+			vector<uint8_t> data;
+			data.push_back(Ptcp::PTCP_PACKETTYPE_DATA);
+			for (int i = 0; i < wn; i++) {
+				data.push_back(send_buf[i]);
+			}
+			ptcp->send(data);
 		}
 	}
 }
@@ -56,14 +45,31 @@ void Ptcp_client::send() {
 void Ptcp_client::recv() {
 	int len = sizeof(server_info);
 	while (true) {
-		int rl = recvfrom(sk, recv_buf, 2500, 0, (sockaddr*)& server_info, &len);
-		if (rl > 0) {
-			vector<uint8_t> data;
-			for (int i = 0; i < rl; i++) {
-				data.push_back(recv_buf[i]);
-				//printf("%X ", data[i]);
+		vector<uint8_t> data = ptcp->recv();
+		if (data.size() > 1 && data[0] == Ptcp::PTCP_PACKETTYPE_DATA) {
+			vector<uint8_t> data_send;
+			for (int i = 1; i < data.size(); i++) {
+				data_send.push_back(data[i]);
 			}
-			tun->write(data);
+			tun->write(data_send);
 		}
 	}
+}
+
+bool login_check(vector<uint8_t>& data) {
+	if (data.size() <= 1) return false;
+	cout << data[0] << " " << data[1] << endl;
+	if (data[0] == Ptcp::PTCP_PACKETTYPE_LOGIN || data[1] == Ptcp::PTCP_LOGINMSG_SUCCESS) return true;
+	return false;
+}
+
+bool Ptcp_client::login() {
+	vector<uint8_t> data;
+	data.push_back(Ptcp::PTCP_PACKETTYPE_LOGIN);
+	for (uint8_t c : config->token) {
+		data.push_back(c);
+	}
+
+	ptcp->send_until(data, login_check);
+	return true;
 }

@@ -8,5 +8,5 @@ public:
 	virtual int header_length() { return 0; }
 	virtual int read(uint8_t* buf, int max_size) { return 0; }
 	virtual int write(uint8_t* buf, int max_size) { return 0; }
-	virtual string to_string() { return NULL; }
+	virtual string to_string() { return ""; }
 };

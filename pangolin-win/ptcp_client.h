@@ -5,17 +5,20 @@
 #include <iostream>
 #include <thread>
 #include "config.h"
+#include "ptcp.h"
 #include "tun.h"
 #include "../ethernet/util.h"
 
+bool login_check(vector<uint8_t>& data);
 
 class Ptcp_client {
 public:
 	static const int BUFFSIZE = 2000;
-	Ptcp_client(Config* config, Tun* tun);
+	Ptcp_client(Config* config, Ptcp* ptcp, Tun* tun);
 	~Ptcp_client();
 
 	Config* config;
+	Ptcp* ptcp;
 	Tun* tun;
 	char send_buf[BUFFSIZE];
 	char recv_buf[BUFFSIZE];
@@ -26,4 +29,5 @@ public:
 	bool start();
 	void send();
 	void recv();
+	bool login();
 };

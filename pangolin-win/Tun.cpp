@@ -98,4 +98,5 @@ bool Tun::start() {
 
 bool Tun::stop() {
 	WinDivertClose(handle);
+	return true;
 }
