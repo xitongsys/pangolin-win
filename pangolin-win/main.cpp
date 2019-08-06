@@ -15,12 +15,18 @@ int main() {
 	Ptcp ptcp(&config);
 
 	if (config.protocol == "ptcp") {
+		cout << "starting ptcp client..." << endl;
 		Ptcp_client ptcp_client(&config, &ptcp, &tun);
-		ptcp_client.start();
+		if (!ptcp_client.start()) {
+			cout << "start failed" << endl;
+		}
 	}
 	else {
+		cout << "starting udp client" << endl;
 		Udp_client udp_client(&config, &tun);
-		udp_client.start();
+		if (!udp_client.start()) {
+			cout << "start failed" << endl;
+		}
 	}
 	return 0;
 }

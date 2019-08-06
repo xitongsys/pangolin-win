@@ -1,9 +1,9 @@
 {
     "role": "client",
-    "server": "149.129.49.157:12345",
+    "server": "0.0.0.0:12345",
     "tun": "10.0.0.22/8",
     "dns": "8.8.8.8",
     "mtu": 1400,
-    "protocol": "udp",
+    "protocol": "ptcp",
     "tokens": ["token01", "token02"]
 }

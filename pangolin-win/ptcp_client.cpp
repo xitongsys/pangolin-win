@@ -16,6 +16,7 @@ bool Ptcp_client::start() {
 	if (!ptcp->dial()) return false;
 	if (!login()) return false;
 
+	cout << "ptcp client started" << endl;
 	thread send_thread(&Ptcp_client::send, this);
 	thread recv_thread(&Ptcp_client::recv, this);
 	send_thread.join();
@@ -70,7 +71,6 @@ void Ptcp_client::recv() {
 
 bool login_check(vector<uint8_t>& data) {
 	if (data.size() <= 1) return false;
-	cout << data[0] << " " << data[1] << endl;
 	if (data[0] == Ptcp::PTCP_PACKETTYPE_LOGIN || data[1] == Ptcp::PTCP_LOGINMSG_SUCCESS) return true;
 	return false;
 }

@@ -32,6 +32,8 @@ bool Udp_client::start() {
 	u_long mode = 1;
 	ioctlsocket(sk, FIONBIO, &mode);
 
+	cout << "udp client started" << endl;
+
 	thread send_thread(&Udp_client::send, this);
 	thread recv_thread(&Udp_client::recv, this);
 

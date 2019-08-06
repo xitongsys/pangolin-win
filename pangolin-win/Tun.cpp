@@ -9,7 +9,6 @@
 Tun::Tun(Config* config) {
 	handle = NULL;
 	this->config = config;
-
 }
 
 Tun::~Tun(){}
