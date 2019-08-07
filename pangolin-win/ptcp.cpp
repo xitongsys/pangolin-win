@@ -9,29 +9,7 @@ Ptcp::~Ptcp() {}
 
 bool Ptcp::start() {
 	local_ip = config->gateway->addr;
-	WORD socketVersion = MAKEWORD(2, 2);
-	WSADATA wsaData;
-	if (WSAStartup(socketVersion, &wsaData) != 0) {
-		return false;
-	}
-
-	struct sockaddr_in server_info;
-	int len = sizeof(server_info);
-	memset(&server_info, 0, len);
-	server_info.sin_family = AF_INET;
-	server_info.sin_port = htons(config->server_ptcp_port);
-	inet_pton(AF_INET, config->server_ip.c_str(), (void*)& server_info.sin_addr.S_un.S_addr);
-
-	SOCKET sk;
-	sk = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (sk == SOCKET_ERROR) {
-		return false;
-	}
-
-	struct sockaddr_in sin;
-	len = sizeof(sin);
-	getsockname(sk, (struct sockaddr*) & sin, &len);
-	local_port = ntohs(sin.sin_port);
+	local_port = (rand() % 50000) + 10000;
 
 	server_ip = str2ip(config->server_ip);
 	server_port = config->server_ptcp_port;
