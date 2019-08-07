@@ -1,5 +1,6 @@
 #include "ptcp.h"
 #include <iostream>
+#include <time.h>
 
 Ptcp::Ptcp(Config *config) {
 	this->config = config;
@@ -8,6 +9,7 @@ Ptcp::Ptcp(Config *config) {
 Ptcp::~Ptcp() {}
 
 bool Ptcp::start() {
+	srand(time(NULL));
 	local_ip = config->gateway->addr;
 	local_port = (rand() % 50000) + 10000;
 
