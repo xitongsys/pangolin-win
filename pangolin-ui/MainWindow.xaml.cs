@@ -96,6 +96,11 @@ namespace pangolin_ui
             while (!proc.StandardOutput.EndOfStream)
             {
                 string line = proc.StandardOutput.ReadLine();
+                if(line == "udp client started" || line == "ptcp client started")
+                {
+                    MessageBox.Show("Connected", "Pangolin");
+                }
+
                 outputBox.Dispatcher.Invoke(
                     new AppendTextCallback(this.AppendOutput),
                     line
@@ -104,6 +109,7 @@ namespace pangolin_ui
 
             proc.WaitForExit();
 
+            MessageBox.Show("Disconnected", "Pangolin");
             outputBox.Dispatcher.Invoke(
                 new UpdateUI(this.UpdateUnconnected)
                 );
@@ -132,6 +138,7 @@ namespace pangolin_ui
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            startButton.IsEnabled = false;
             outputBox.Text = "";
             UpdateNormal();
             LoadUItoConfig();
@@ -142,6 +149,7 @@ namespace pangolin_ui
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
+            startButton.IsEnabled = true;
             try
             {
                 proc.Kill();
@@ -152,6 +160,11 @@ namespace pangolin_ui
         private void On_Closed(object sender, EventArgs e)
         {
             StopButton_Click(sender, null);
+        }
+
+        private void AboutButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Pangolin v1.0", "Pangolin");
         }
     }
 }

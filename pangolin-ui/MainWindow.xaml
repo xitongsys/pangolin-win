@@ -30,7 +30,7 @@
         </ComboBox>
         <Button x:Name="startButton" Content="Start" HorizontalAlignment="Left" Height="28" Margin="10,220,0,0" VerticalAlignment="Top" Width="97" Grid.ColumnSpan="2" Click="StartButton_Click"/>
         <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" Height="28" Margin="50,220,0,0" VerticalAlignment="Top" Width="97" Grid.Column="1" Click="StopButton_Click"/>
-        <Button x:Name="aboutButton" Content="About" HorizontalAlignment="Left" Height="28" Margin="165,220,0,0" VerticalAlignment="Top" Width="97" Grid.Column="1"/>
+        <Button x:Name="aboutButton" Content="About" HorizontalAlignment="Left" Height="28" Margin="165,220,0,0" VerticalAlignment="Top" Width="97" Grid.Column="1" Click="AboutButton_Click"/>
         <TextBox x:Name="tokenEdit" Grid.Column="1" HorizontalAlignment="Left" Height="28" Margin="7,176,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="255"/>
         <TextBox x:Name="outputBox" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="138" Margin="10,258,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="332" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"/>
 
