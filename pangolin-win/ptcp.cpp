@@ -38,6 +38,7 @@ int Ptcp::send_until(vector<uint8_t>& data, uint64_t timeout, bool (*pfun)(vecto
 		}
 		uint64_t now = time(0);
 		if (now - start >= timeout) {
+			cout << now << " " << start << endl;
 			return -1;
 		}
 	}

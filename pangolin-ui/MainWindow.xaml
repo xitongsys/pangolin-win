@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:pangolin_ui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="337.156" Width="367.679">
+        Title="Pangolin" Height="337" Width="367" MaxHeight="337" MaxWidth="367" MinHeight="337" MinWidth="367">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="39*"/>

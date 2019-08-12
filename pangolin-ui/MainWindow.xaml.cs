@@ -81,7 +81,7 @@ namespace pangolin_ui
             {
                 UseShellExecute = false,
                 RedirectStandardInput = false,
-                CreateNoWindow = false
+                CreateNoWindow = true
             };
 
             proc = new Process()
@@ -127,7 +127,11 @@ namespace pangolin_ui
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            proc.Kill();
+            try
+            {
+                proc.Kill();
+            }
+            catch (Exception ex) { }
             UpdateStatusUnconnected();
         }
     }
