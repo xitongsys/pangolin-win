@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -67,25 +69,66 @@ namespace pangolin_ui
             cfg.mtu = Int32.Parse(mtuEdit.Text);
             cfg.tokens.Clear();
             cfg.tokens.Add(tokenEdit.Text);
-            cfg.protocol = ((ComboBoxItem)protoComboBox.SelectedItem).Content.ToString();
+            cfg.protocol = ((ComboBoxItem)protoComboBox.SelectedItem).Content.ToString().ToLower();
         }
 
-        [DllImport(@"pangolin-win.dll")]
-        public static extern void main();
+        public delegate void UpdateTextCallback();
+
+        public Process proc;
+        public void RunPangolin()
+        {
+            ProcessStartInfo psi = new ProcessStartInfo("pangolin-win.exe")
+            {
+                UseShellExecute = false,
+                RedirectStandardInput = false,
+                CreateNoWindow = false
+            };
+
+            proc = new Process()
+            {
+                StartInfo = psi
+            };
+
+            proc.Start();
+            statusLabel.Dispatcher.Invoke(
+                new UpdateTextCallback(this.UpdateStatusConnected)
+                );
+            
+            proc.WaitForExit();
+
+            statusLabel.Dispatcher.Invoke(
+                new UpdateTextCallback(this.UpdateStatusUnconnected)
+                );
+        }
+
+        private void UpdateStatusConnecting()
+        {
+            statusLabel.Content = "Status: Connecting";
+        }
+
+        private void UpdateStatusUnconnected()
+        {
+            statusLabel.Content = "Status: Unconnected";
+        }
+
+        private void UpdateStatusConnected()
+        {
+            statusLabel.Content = "Status: Connected";
+        }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-           // MessageBox.Show(Directory.GetCurrentDirectory());
+            UpdateStatusConnecting();
             LoadUItoConfig();
             cfg.SaveConfig();
-            try
-            {
-                main();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            Thread thr = new Thread(RunPangolin);
+            thr.Start();
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            proc.Kill();
+            UpdateStatusUnconnected();
         }
     }
 }

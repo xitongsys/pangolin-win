@@ -82,6 +82,7 @@ bool Ptcp_client::login() {
 		data.push_back(c);
 	}
 
-	ptcp->send_until(data, login_check);
+	int n = ptcp->send_until(data, 60, login_check);
+	if (n < 0) return false;
 	return true;
 }

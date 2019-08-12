@@ -30,7 +30,7 @@ namespace pangolin_ui
             server = "0.0.0.0:12345";
             dns = "1.1.1.1";
             tun = "10.0.0.22";
-            protocol = "PTCP";
+            protocol = "ptcp";
             mtu = 1400;
             tokens.Add("token01");
         }
@@ -61,7 +61,7 @@ namespace pangolin_ui
             server = c.server;
             dns = c.dns;
             tun = c.tun;
-            protocol = c.protocol;
+            protocol = c.protocol.ToLower();
             mtu = c.mtu;
             tokens = c.tokens;
         }

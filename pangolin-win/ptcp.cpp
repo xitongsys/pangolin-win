@@ -28,12 +28,17 @@ bool Ptcp::stop() {
 	return true;
 }
 
-int Ptcp::send_until(vector<uint8_t>& data, bool (*pfun)(vector<uint8_t>& data)) {
+int Ptcp::send_until(vector<uint8_t>& data, uint64_t timeout, bool (*pfun)(vector<uint8_t>& data)) {
+	uint64_t start = time(0);
 	while (true) {
 		send(data);
 		vector<uint8_t> data_recv = recv();
 		if ((*pfun)(data_recv)) {
 			break;
+		}
+		uint64_t now = time(0);
+		if (now - start >= timeout) {
+			return -1;
 		}
 	}
 	return data.size();
