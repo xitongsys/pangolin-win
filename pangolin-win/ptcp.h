@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <atomic>
+#include <cstdint>
 #include "config.h"
 #include "windivert.h"
 #include "../ethernet/util.h"
@@ -33,11 +35,13 @@ public:
 public:
 	bool start();
 	bool stop();
-	bool dial();
+	bool dial(atomic<bool>* res);
+	bool dial_timeout(uint64_t timeout);
 	int send_raw(vector<uint8_t>& data);
 	vector<uint8_t> recv_raw();
 	int send(vector<uint8_t>& data);
-	int send_until(vector<uint8_t>& data, uint64_t timeout, bool (*fun)(vector<uint8_t>&data));
+	int send_until(vector<uint8_t> data, bool (*fun)(vector<uint8_t>& data), atomic<int> *res);
+	int send_until_timeout(vector<uint8_t> data, uint64_t timeout, bool (*fun)(vector<uint8_t>&data));
 	vector<uint8_t> recv();
 	void build_tcp(Frame &frame, vector<uint8_t>& data);
 };

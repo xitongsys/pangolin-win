@@ -23,11 +23,9 @@ int _declspec(dllexport) main() {
 	Ptcp ptcp(&config);
 
 	if (to_lower(config.protocol) == "ptcp") {
-		string s = "starting";
 		cout << "starting ptcp client..." << endl;
 		Ptcp_client ptcp_client(&config, &ptcp, &tun);
 		if (!ptcp_client.start()) {
-			s = "failed";
 			cout << "start failed" << endl;
 			return -1;
 		}

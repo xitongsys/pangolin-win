@@ -39,6 +39,7 @@ namespace pangolin_ui
             }
 
             LoadConfigToUI();
+            UpdateStatusUnconnected();
         }
 
         public void LoadConfigToUI()
@@ -104,16 +105,19 @@ namespace pangolin_ui
         private void UpdateStatusConnecting()
         {
             statusLabel.Content = "Status: Connecting";
+            statusLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF00"));
         }
 
         private void UpdateStatusUnconnected()
         {
             statusLabel.Content = "Status: Unconnected";
+            statusLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#AAAAAA"));
         }
 
         private void UpdateStatusConnected()
         {
             statusLabel.Content = "Status: Connected";
+            statusLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00FF00"));
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)

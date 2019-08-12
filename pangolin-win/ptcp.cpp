@@ -1,6 +1,8 @@
 #include "ptcp.h"
 #include <iostream>
 #include <time.h>
+#include <thread>
+#include <future>
 
 Ptcp::Ptcp(Config *config) {
 	this->config = config;
@@ -28,21 +30,36 @@ bool Ptcp::stop() {
 	return true;
 }
 
-int Ptcp::send_until(vector<uint8_t>& data, uint64_t timeout, bool (*pfun)(vector<uint8_t>& data)) {
-	uint64_t start = time(0);
+int Ptcp::send_until(vector<uint8_t> data, bool (*pfun)(vector<uint8_t>& data), atomic<int>* res) {
 	while (true) {
 		send(data);
 		vector<uint8_t> data_recv = recv();
 		if ((*pfun)(data_recv)) {
 			break;
 		}
+	}
+	res->store(data.size());
+	return data.size();
+}
+
+int Ptcp::send_until_timeout(vector<uint8_t> data, uint64_t timeout, bool (*pfun)(vector<uint8_t>& data)) {
+	atomic<int> *res = new atomic<int>(-1);
+	thread t(&Ptcp::send_until, this, data, pfun, res);
+
+	uint64_t start = time(0);
+	while (true) {
+		if (res->load()>=0) {
+			break;
+		}
+
 		uint64_t now = time(0);
 		if (now - start >= timeout) {
-			cout << now << " " << start << endl;
-			return -1;
+			break;
 		}
+		Sleep(100);
 	}
-	return data.size();
+	t.detach();
+	return res->load();
 }
 
 int Ptcp::send(vector<uint8_t>& data) {
@@ -109,7 +126,7 @@ vector<uint8_t> Ptcp::recv_raw() {
 	return res;
 }
 
-bool Ptcp::dial() {
+bool Ptcp::dial(atomic<bool>* res) {
 	Frame frame0;
 	uint8_t buf0[BUFFSIZE];
 	vector<uint8_t> data;
@@ -149,7 +166,27 @@ bool Ptcp::dial() {
 	}
 
 	send_raw(data0);
+	res->store(true);
 	return true;
+}
+
+bool Ptcp::dial_timeout(uint64_t timeout) {
+	atomic<bool> *res=new atomic<bool>(false);
+	thread t(&Ptcp::dial, this, res);
+	
+	uint64_t start = time(0);
+	while (true) {
+		if (res->load()) {
+			break;
+		}
+
+		uint64_t now = time(0);
+		if (now - start > timeout) {
+			break;
+		}
+	}
+	t.detach();
+	return res->load();
 }
 
 void Ptcp::build_tcp(Frame& frame, vector<uint8_t>& data) {
