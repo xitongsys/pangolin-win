@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -68,10 +70,22 @@ namespace pangolin_ui
             cfg.protocol = ((ComboBoxItem)protoComboBox.SelectedItem).Content.ToString();
         }
 
+        [DllImport(@"pangolin-win.dll")]
+        public static extern void main();
+
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+           // MessageBox.Show(Directory.GetCurrentDirectory());
             LoadUItoConfig();
             cfg.SaveConfig();
+            try
+            {
+                main();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

@@ -7,7 +7,7 @@
 using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
 
-int main() {
+int _declspec(dllexport) main() {
 	cout << "welcome to pangolin" << endl;
 	Config config("config.txt");
 	cout << config.to_string() << endl;
