@@ -39,7 +39,6 @@ namespace pangolin_ui
             }
 
             LoadConfigToUI();
-            UpdateStatusUnconnected();
         }
 
         public void LoadConfigToUI()
@@ -73,7 +72,9 @@ namespace pangolin_ui
             cfg.protocol = ((ComboBoxItem)protoComboBox.SelectedItem).Content.ToString().ToLower();
         }
 
-        public delegate void UpdateTextCallback();
+        public delegate void UpdateTextCallback(string s);
+        public delegate void AppendTextCallback(string s);
+        public delegate void UpdateUI();
 
         public Process proc;
         public void RunPangolin()
@@ -82,6 +83,7 @@ namespace pangolin_ui
             {
                 UseShellExecute = false,
                 RedirectStandardInput = false,
+                RedirectStandardOutput = true,
                 CreateNoWindow = true
             };
 
@@ -91,38 +93,47 @@ namespace pangolin_ui
             };
 
             proc.Start();
-            statusLabel.Dispatcher.Invoke(
-                new UpdateTextCallback(this.UpdateStatusConnected)
-                );
-            
+            while (!proc.StandardOutput.EndOfStream)
+            {
+                string line = proc.StandardOutput.ReadLine();
+                outputBox.Dispatcher.Invoke(
+                    new AppendTextCallback(this.AppendOutput),
+                    line
+                    );
+            }
+
             proc.WaitForExit();
 
-            statusLabel.Dispatcher.Invoke(
-                new UpdateTextCallback(this.UpdateStatusUnconnected)
+            outputBox.Dispatcher.Invoke(
+                new UpdateUI(this.UpdateUnconnected)
                 );
         }
 
-        private void UpdateStatusConnecting()
+        private void AppendOutput(string s)
         {
-            statusLabel.Content = "Status: Connecting";
-            statusLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF00"));
+            outputBox.Text += "\n" + s;
+            outputBox.ScrollToEnd();
         }
 
-        private void UpdateStatusUnconnected()
+        private void UpdateNormal()
         {
-            statusLabel.Content = "Status: Unconnected";
-            statusLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#AAAAAA"));
+            outputBox.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0xFF));
         }
 
-        private void UpdateStatusConnected()
+        private void UpdateUnconnected()
         {
-            statusLabel.Content = "Status: Connected";
-            statusLabel.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#00FF00"));
+            outputBox.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0x00, 0x00));
+        }
+
+        private void UpdateConnected()
+        {
+            outputBox.Background = new SolidColorBrush(Color.FromRgb(0x00, 0xAA, 0x00));
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateStatusConnecting();
+            outputBox.Text = "";
+            UpdateNormal();
             LoadUItoConfig();
             cfg.SaveConfig();
             Thread thr = new Thread(RunPangolin);
@@ -136,7 +147,11 @@ namespace pangolin_ui
                 proc.Kill();
             }
             catch (Exception ex) { }
-            UpdateStatusUnconnected();
+        }
+
+        private void On_Closed(object sender, EventArgs e)
+        {
+            StopButton_Click(sender, null);
         }
     }
 }

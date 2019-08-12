@@ -15,7 +15,7 @@ bool Ptcp_client::start() {
 	cout << "tun start done" << endl;
 	if (!ptcp->start()) return false;
 	cout << "ptcp start done" << endl;
-	if (!ptcp->dial_timeout(30)) return false;
+	if (!ptcp->dial_timeout(10)) return false;
 	cout << "dial done" << endl;
 	if (!login()) return false;
 	cout << "login done" << endl;
@@ -86,7 +86,7 @@ bool Ptcp_client::login() {
 		data.push_back(c);
 	}
 
-	int n = ptcp->send_until_timeout(data, 30, login_check);
+	int n = ptcp->send_until_timeout(data, 10, login_check);
 	if (n < 0) return false;
 	return true;
 }
