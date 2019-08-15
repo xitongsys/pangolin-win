@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include "header.h"
-using namespace std;
+using std::vector;
 
 class TCP : public Header {
 public:
