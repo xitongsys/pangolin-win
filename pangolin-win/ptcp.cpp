@@ -22,6 +22,7 @@ bool Ptcp::start() {
 	char filter[1024];
 	sprintf_s(filter, 1024, fmt, config->server_ip.c_str(), config->server_ip.c_str(), config->server_ptcp_port, config->gateway->ifIndex);
 	handle = WinDivertOpen(filter, WINDIVERT_LAYER_NETWORK, 0, 0);
+	cout << "Ptcp Filter: " << string(filter) << endl;
 	return !(handle == INVALID_HANDLE_VALUE);
 }
 
