@@ -1,9 +1,16 @@
-# Pangolin-win
+# ![logo](imgs/logo.png) Pangolin-win
 This is a windows client for [pangolin](https://github.com/xitongsys/pangolin).
-It supports udp and ptcp protocol.
+It supports UDP and PTCP protocol.
+
+![win](imgs/win.png)
 
 ## Quick start
-1. Configure the config.txt file. You should change the server ip and tokens.
+
+### Run with UI
+Run the ```pangolin-ui.exe``` using Administrator.
+
+### Run in command line
+1. Configure the config.txt file. 
 ```json
 {
     "role": "client",
@@ -16,4 +23,4 @@ It supports udp and ptcp protocol.
 }
 ```
 
-2. Run the ```pangolin-win.exe``` as Administrator.
+2. Run the ```pangolin-win.exe``` using Administrator.
